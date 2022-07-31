@@ -1,0 +1,7 @@
+CREATE DEFINER=`root`@`localhost` FUNCTION `TotalPedidos`( ped INT) RETURNS int
+    DETERMINISTIC
+BEGIN
+	DECLARE Ped INT;
+    SELECT COUNT(*) INTO Ped FROM Pedido;
+    RETURN Ped;
+END
