@@ -2,73 +2,62 @@ create database ProvASede;
 
 use ProvASede;
 
-create table Proveedores(
-	IDProv int not null,
-    tipoProd varchar(45)not null,
-    IDProd int not null,
-    nomProv varchar (45) not null,
-    dirProv varchar (45) not null,
-    telProv int not null,
-    redesProv varchar(100) not null,
-    emailProv varchar (100) not null,
+CREATE TABLE `Proveedores` (
+  `IDProv` int NOT NULL,
+  `tipoProd` varchar(45) COLLATE utf8mb3_bin NOT NULL,
+  `nomProv` varchar(45) COLLATE utf8mb3_bin NOT NULL,
+  `dirProv` varchar(45) COLLATE utf8mb3_bin NOT NULL,
+  `telProv` int NOT NULL,
+  `redesProv` varchar(100) COLLATE utf8mb3_bin NOT NULL,
+  `emailProv` varchar(100) COLLATE utf8mb3_bin NOT NULL,
+  PRIMARY KEY (`IDProv`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_bin
     
-primary key (IDProv)
-
-
-);
+  CREATE TABLE `Productos` (
+  `IDProd` int NOT NULL,
+  `nomProd` varchar(45) COLLATE utf8mb3_bin NOT NULL,
+  `IDProv` int NOT NULL AUTO_INCREMENT,
+  `loteProd` int NOT NULL,
+  `cantProd` int NOT NULL,
+  `pesoProd` int NOT NULL,
+  `preUnProd` int NOT NULL,
+  PRIMARY KEY (`IDProd`),
+  KEY `Productos_ibfk_1` (`IDProv`),
+  CONSTRAINT `Productos_ibfk_1` FOREIGN KEY (`IDProv`) REFERENCES `Proveedores` (`IDProv`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_bin
     
-    create table Productos (
-    IDProd int not null,
-    nomProd varchar (45) not null,
-    IDProv int not null,
-    loteProd int not null,
-    cantProd int not null,
-    pesoProd int not null,
-    preUnProd int not null,
-    
-primary key (IDProd),
-foreign key(IDProv) references Proveedores(IDProv)
-);
-    
-    create table Pedido(
-    IDPedido int not null,
-    FechaPedido datetime not null,
-    IDProv int not null,
-    IDProd int not  null,
-    cantProd int not null,
-    FechaEntrega datetime,
-    IDSede int not null,
-    DetaSoNP int not null,
-    preTotal int not null,
-    
-primary key (IDPedido),
-foreign key(IDProv) references Proveedores(IDProv),
-foreign key(IDProd) references Productos(IDProd),
-foreign key(IDSede) references Sede(IDSede),
-foreign key(DetaSoNP) references DetallesPedido(DetaSoNP)
-);
+    CREATE TABLE `Pedido` (
+  `IDPedido` int NOT NULL,
+  `FechaPedido` date NOT NULL,
+  `IDProv` int NOT NULL,
+  `IDProd` int NOT NULL,
+  `cantProd` int NOT NULL,
+  `FechaEntrega` date NOT NULL,
+  `preTotal` int NOT NULL,
+  PRIMARY KEY (`IDPedido`),
+  KEY `IDProd` (`IDProd`),
+  KEY `IDProv` (`IDProv`),
+  CONSTRAINT `Pedido_ibfk_1` FOREIGN KEY (`IDProd`) REFERENCES `Productos` (`IDProd`),
+  CONSTRAINT `Pedido_ibfk_2` FOREIGN KEY (`IDProv`) REFERENCES `Proveedores` (`IDProv`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_bin
 
-create table DetallesPedido(
-DetaSoNP int not null ,
-IDPedido int not null,
-DescDeta varchar(45) not null,
-FechaPedido datetime not null,
-FechaEntrega datetime  not null,
+CREATE TABLE `DetallesPedido` (
+  `DetaSoNP` int NOT NULL,
+  `IDPedido` int NOT NULL,
+  `DescDeta` varchar(45) COLLATE utf8mb3_bin NOT NULL,
+  `FechaPedido` date NOT NULL,
+  `IDSede` varchar(45) COLLATE utf8mb3_bin NOT NULL,
+  PRIMARY KEY (`DetaSoNP`),
+  KEY `IDPedido` (`IDPedido`),
+  CONSTRAINT `DetallesPedido_ibfk_1` FOREIGN KEY (`IDPedido`) REFERENCES `Pedido` (`IDPedido`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_bin
 
-primary key (DetaSoNP),
-foreign key(IDPedido) references Pedidos(IDPedido)
-
-);
-
-create table Sede(
-IDSede int not null ,
-IDPedido int not null,
-dirSede varchar(45) not null,
-medPago varchar (45) not null,
-
-primary key (IDSede),
-foreign key(IDPedido) references Pedidos(IDPedido)
-);
-
-
-
+CREATE TABLE `Sede` (
+  `IDSede` int NOT NULL AUTO_INCREMENT,
+  `IDPedido` int NOT NULL,
+  `dirSede` varchar(45) COLLATE utf8mb3_bin NOT NULL,
+  `medPago` varchar(45) COLLATE utf8mb3_bin NOT NULL,
+  PRIMARY KEY (`IDSede`),
+  KEY `IDPedido` (`IDPedido`),
+  CONSTRAINT `Sede_ibfk_1` FOREIGN KEY (`IDPedido`) REFERENCES `Pedido` (`IDPedido`)
+) ENGINE=InnoDB AUTO_INCREMENT=118 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_bin
